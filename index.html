@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 align="center">Resume Builder</h1>
+    <div id="btn">
+    <button onclick="logout()" style="background-color:red;width:100px;" >Logout</button></div>
+        <marquee direction="right" scrollamount="10">"Welcome To Resume Builder Website"-Fill the Form ,Choose a Template & Get Your Resume Instantly!"</marquee>
+        <form action="" id="resume-form">
+        <div id="container">
+        <label for="photo">Upload Photo</label>
+        <input type="file" id="photo" accept="image/*" required><br><br>
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter Your Full Name"required> <br> <br>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="abc@gmail.com" required>
+        <br><br>
+        <label for="phone">Phone No</label>
+        <input type="tel" id="phone" placeholder="1234567890" required>
+        <br><br><br>
+        <label for="Languages">Languages</label><br>
+        <textarea id="language" rows="1" cols="20" placeholder="Languages" required></textarea><br><br>
+        <label for="skills">Skills</label><br>
+        <textarea id="skills" rows="1" cols="20" placeholder="Skills" required></textarea><br><br>
+        <label for="Education">Education</label><br>
+        <textarea name="education" id="education" rows="1" cols="20" Placeholder="Education" required></textarea><br><br>
+        <label for="experience">Experience</label><br>
+        <textarea id="experience" rows="1" cols="20" placeholder=" Experience" required></textarea>
+        <br><br>
+        <label for="interest">Activities and Interest</label><br>
+        <textarea name="interest" id="activities" rows="1" cols="20" placeholder="Activities & Interest" required></textarea><br><br>
+        <label for="template">Layout</label>
+        <select id="template">
+            <option value="default">--Select Resume Layout--</option>
+            <option value="template1">Classic</option>
+            <option value="template2">Modern</option>
+            </select>
+            <br><br>
+           <button type="submit">Generate Resume</button> 
+        </div>
+    </form>
+    <script>
+        if(!sessionStorage.getItem("loggedin")){
+            window.location.href="login.html";
+        }
+        function logout(){
+            sessionStorage.removeItem("loggedin");
+            window.location.href="login.html"
+        }
+        document.getElementById("resume-form").onsubmit = function (event) {
+            event.preventDefault();
+
+            // Get form values
+            const photo = document.getElementById("photo").files[0]; // Fix for photo input
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+            const language = document.getElementById("language").value;
+            const skills = document.getElementById("skills").value;
+            const education = document.getElementById("education").value;
+            const experience = document.getElementById("experience").value;
+            const activities = document.getElementById("activities").value;
+            const layout = document.getElementById("template").value;
+
+            // Check if a layout is selected
+            if (layout === "default") {
+                alert("Please select a valid resume layout!");
+                return;
+            }
+
+            // Open new window
+            const resumeWindow = window.open('', '_blank');
+
+            // Handle photo upload
+            let photoTag = "";
+            if (photo) {
+                const photoURL = URL.createObjectURL(photo);
+                photoTag = `<img src="${photoURL}" alt="Profile Photo" style="width: 150px; height: 150px; border-radius: 2px;border:1px solid black;">`;
+            }
+            const formattedExperience = experience.split('\n').map(para => `<p>${para.trim()}</p>`).join('');
+            if(layout === "template1") {
+        resumeWindow.document.write(`
+            <html>
+            <head>
+                <title>${name}'s Resume</title>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+                <style>
+
+                    body { padding: 20px;}
+                    h1 { text-align: center; }
+                    .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ccc;background-color: hsl(0, 0%, 95%);border-radius:2px;}
+                    .photo { text-align: center; margin-bottom: 20px; }
+                    .section { margin-bottom: 20px; }
+                    .section h2 { border-bottom: 2px solid #000; }
+                    *{
+                    font-family:'poppins',sans-serif;}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="photo">${photoTag}</div>
+                    <h1>${name}'s Resume</h1>
+                  <p> <i class="fa-solid fa-envelope"></i> ${email}</p>
+                   <p><i class="fa-solid fa-phone"></i> ${phone}</p>
+
+                    <div class="section">
+                        <h2>Languages</h2>
+                        <pre>${language}</pre>
+                    </div>
+
+                    <div class="section">
+                        <h2>Skills</h2>
+                        <pre>${skills}</pre>
+                    </div>
+
+                    <div class="section">
+                        <h2>Education</h2>
+                        <pre>${education}</pre>
+                    </div>
+
+                    <div class="section">
+                        <h2>Experience</h2>
+                        <p>${formattedExperience}</p>
+                    </div>
+                    <div class="section">
+                        <h2>Activities & Interests</h2>
+                        <pre>${activities}</pre>
+                    </div>
+                </div>
+                <a href="index.html" style="background-color:black;color:white;border-radius:5px;padding:10px;text-decoration:none">Refresh</a>
+            </body>
+            </html>
+        `);
+        resumeWindow.document.close();
+    }
+     if(layout === "template2") {
+        resumeWindow.document.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>template2</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        *{
+            font-family: 'poppins',sans-serif;
+        }
+        #container{
+            width:800px;
+           background-color: hsl(0, 0%, 95%);
+           border-radius:2px;
+        }
+        .resume{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+             
+        }
+#img-container{
+    background-color: rgb(200, 178, 200);
+    height:150px;
+    display:flex;
+    border-radius: 2px;
+    border:1px solid rgb(212, 211, 211);
+}
+#text1{
+    margin:5px;
+}
+#dash{
+text-decoration: underline;
+}
+h3{
+    padding-top:25px;
+}
+#right{
+    display: flex;
+}
+#moveall{
+    display:flex;
+    padding:10px;
+}
+#move2{
+margin-left:1
+}
+    </style>
+</head>
+<body style=";">
+    <div class="resume">
+    <div id="container">
+    <h1 align="center">Resume</h1>
+    <div id="img-container">
+        ${photoTag}
+        <div id="text1">
+        <p style="font-weight:bold;font-size:30px">${name}</p>
+        <pre style="font-size:13px"><i class="fa-solid fa-phone"></i> ${phone}   <i class="fa-solid fa-envelope"></i> <u>${email}</u></pre>
+   </div>
+ </div>
+ <div id="moveall">
+ <div id="move1">
+ <h3>Skills</h3>
+ <pre id="dash">${skills}</pre>
+ <h3>Hobbies</h3>
+ <pre>${activities}</pre>
+ <h3>Language</h3>
+ <pre><u>${language}</u></pre>
+ <h3>Experience</h3>
+ <p>${formattedExperience}</p>
+</div>
+<div id="move2">
+<h3>Education</h3>
+ <pre>${education}</pre>
+    </div>
+    </div>
+</div>
+</div>
+<a href="index.html" style="background-color:black;color:white;border-radius:5px;padding:10px;text-decoration:none;margin:10px;">Refresh</a>
+</body>
+</html>
+     `);
+     resumeWindow.document.close();
+};
+        }
+    </script>
+</body>
+</html>
