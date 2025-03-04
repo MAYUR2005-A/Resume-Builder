@@ -1,4 +1,4 @@
-# Resume-Builder
+# RESUME-BUILDER
 <ul>
   <li>Html</li>
   <li>Css</li>
